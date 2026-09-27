@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang=ko><script type=importmap>{"imports":{"39Ont":"./32-month.2fa48cd2.png","6k6lT":"./18-month.499d3a73.png","bKQgp":"./Box2D.b9b16b27.wasm","bfx6g":"./16-month.90b7ddc1.png","bvGyV":"./12-month.bfee08fd.png","cU6KN":"./22-month.ac210232.png","dCisC":"./Box2D.bc64b268.js","e4Arv":"./08-month.af77d3b2.png","fveN6":"./02-month.307c72ba.png","gl1CK":"./26-month.9d56349e.png","gwwaU":"./36-month.b84a84d2.png","i3RxU":"./04-month.125d1342.png","iIgkA":"./Box2D.simd.385aefb9.js","jLOtP":"./28-month.98d39ac4.png","jcRBp":"./20-month.bb3a3f44.png","juMvj":"./ff.7fdc9e82.svg","kP1Zy":"./24-month.ed406c47.png","l5TO8":"./Box2D.simd.dd31b167.wasm","lROAf":"./06-month.c43e92c6.png","npXOy":"./01-month.9e2595fc.png"}}</script><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><title>타요 핀볼</title><meta name=viewport content="width=device-width, initial-scale=1.0"><link rel=apple-touch-icon href=tayo-pinball-icon-192.087459b5.png><link rel=icon type=image/png href=tayo-pinball-icon-192.087459b5.png><link rel=manifest href=assets/manifest.webmanifest><meta name=msapplication-TileColor content=#000000><meta name=msapplication-TileImage content=tayo-pinball-icon-192.087459b5.png><meta name=theme-color content=#000000><meta name=description content="구슬을 굴려 당첨자를 뽑는 추첨기"><meta property=og:title content="타요 핀볼"><meta property=og:description content="구슬을 굴려 당첨자를 뽑는 타요 핀볼 추첨기"><meta property=og:site_name content="타요 핀볼"><meta property=og:type content=website><link rel=stylesheet href=TayoPinball-Rapier-Test.06900489.css><body>
+<script type=module src=TayoPinball-Rapier-Test.6d4edd27.js></script>
+<script>function getNames(){return document.querySelector("#in_names").value.trim().split(/[,\r\n]/g).map(e=>e.trim()).filter(e=>!!e)}function parseName(e){let t=/(\/\d+)/,n=/(\*\d+)/,o=t.test(e),u=n.test(e),r=/^\s*([^\/*]+)?/.exec(e)[1];return{name:r,weight:o?parseInt(t.exec(e)[1].replace("/","")):1,count:u?parseInt(n.exec(e)[1].replace("*","")):1}}function getReady(){resetResultTimer();let e=getNames();switch(window.roulette.setMarbles(e),ready=e.length>0,localStorage.setItem("tayo_rapier_trial_names",e.join(",")),winnerType){case"first":setWinnerRank(1);break;case"last":setWinnerRank(window.roulette.getCount())}}function setWinnerRank(e){document.querySelector("#in_winningRank").value=e,window.options.winningRank=e-1,window.roulette.setWinningRank(window.options.winningRank),"first"===winnerType?(document.querySelector(".btn-first-winner").classList.toggle("active",!0),document.querySelector(".btn-last-winner").classList.toggle("active",!1),document.querySelector("#in_winningRank").classList.toggle("active",!1)):"last"===winnerType?(document.querySelector(".btn-first-winner").classList.toggle("active",!1),document.querySelector(".btn-last-winner").classList.toggle("active",!0),document.querySelector("#in_winningRank").classList.toggle("active",!1)):"custom"===winnerType&&(document.querySelector(".btn-first-winner").classList.toggle("active",!1),document.querySelector(".btn-last-winner").classList.toggle("active",!1),document.querySelector("#in_winningRank").classList.toggle("active",!0))}function setSpeed(e){window.roulette.setSpeed(e),document.querySelectorAll(".btn-speed").forEach(t=>{t.classList.toggle("active",Number(t.dataset.speed)===e)})}let countdownInterval=null,countdownEndAt=0,countdownRemainingMs=0,countdownPaused=!1;function formatCountdown(e){let t=Math.max(0,Math.ceil(e)),n=Math.floor(t/3600),o=Math.floor(t%3600/60).toString().padStart(2,"0"),u=(t%60).toString().padStart(2,"0");return n>0?`${n.toString().padStart(2,"0")}:${o}:${u}`:`${o}:${u}`}function clearCountdownInterval(){null!==countdownInterval&&(clearInterval(countdownInterval),countdownInterval=null)}function updateCountdownPauseButton(){let e=document.querySelector("#btnResultTimerPause");e&&(e.textContent=countdownPaused?"계속":"일시정지",e.setAttribute("aria-pressed",countdownPaused?"true":"false"),e.disabled=countdownRemainingMs<=0)}function clearCountdownState(){clearCountdownInterval(),countdownEndAt=0,countdownRemainingMs=0,countdownPaused=!1,updateCountdownPauseButton()}function resetResultTimer(){clearCountdownState();let e=document.querySelector("#resultTimerOverlay");e&&(e.classList.add("hidden"),e.classList.remove("running"))}function showResultTimerSetup(){clearCountdownState(),document.querySelector("#resultTimerOverlay").classList.remove("hidden","running"),document.querySelector("#in_resultTimerMinutes").focus()}function updateResultCountdown(){countdownPaused||(countdownRemainingMs=Math.max(0,countdownEndAt-Date.now())),document.querySelector("#resultTimerDisplay").textContent=formatCountdown(countdownRemainingMs/1e3),0===countdownRemainingMs&&(clearCountdownInterval(),updateCountdownPauseButton())}function runResultCountdown(){clearCountdownInterval(),countdownEndAt=Date.now()+countdownRemainingMs,updateResultCountdown(),countdownInterval=setInterval(updateResultCountdown,200)}function startResultCountdown(){let e=document.querySelector("#in_resultTimerMinutes"),t=document.querySelector("#in_resultTimerSeconds"),n=Math.max(0,Math.floor(Number(e.value)||0)),o=Math.min(59,Math.max(0,Math.floor(Number(t.value)||0))),u=60*n+o;if(u<=0)return;e.value=n,t.value=o;let r=document.querySelector("#resultTimerOverlay");countdownRemainingMs=1e3*u,countdownPaused=!1,r.classList.add("running"),updateCountdownPauseButton(),runResultCountdown()}function toggleResultCountdownPause(){if(!(countdownRemainingMs<=0)){if(countdownPaused){countdownPaused=!1,updateCountdownPauseButton(),runResultCountdown();return}countdownRemainingMs=Math.max(0,countdownEndAt-Date.now()),countdownPaused=!0,clearCountdownInterval(),updateResultCountdown(),updateCountdownPauseButton()}}let ready=!1,winnerType="first";function initialize(){if(!window.roulette||!window.roulette.isReady)return void setTimeout(initialize,100);let e=new URLSearchParams(window.location.search).get("names");if(e)document.querySelector("#in_names").value=e.replace(/,/g,"\n");else{let e=localStorage.getItem("tayo_rapier_trial_names");e&&(document.querySelector("#in_names").value=e)}document.querySelector("#in_names").addEventListener("input",()=>{getReady()}),document.querySelector("#in_names").addEventListener("blur",()=>{let e=getNames(),t=new Set,n={};e.forEach(e=>{let o=parseName(e),u=o.weight>1?`${o.name}/${o.weight}`:o.name;t.has(u)||(t.add(u),n[u]=0),n[u]+=o.count});let o=[];Object.keys(n).forEach(e=>{n[e]>1?o.push(`${e}*${n[e]}`):o.push(e)});let u=document.querySelector("#in_names").value,r=o.join(",");u!==r&&(document.querySelector("#in_names").value=r,getReady())}),document.querySelector("#btnShuffle").addEventListener("click",()=>{getReady()}),document.querySelector("#btnStart").addEventListener("click",()=>{ready&&(resetResultTimer(),setSpeed(1),document.querySelector("#settings").classList.add("game-running"),window.roulette.start())}),document.querySelectorAll(".btn-speed").forEach(e=>{e.addEventListener("click",()=>setSpeed(Number(e.dataset.speed)))}),setSpeed(1),document.querySelector("#btnResultTimerStart").addEventListener("click",startResultCountdown),document.querySelector("#btnResultTimerPause").addEventListener("click",toggleResultCountdownPause),document.querySelector("#btnResultTimerReset").addEventListener("click",showResultTimerSetup),window.roulette.setTheme("dark"),document.documentElement.classList.remove("light"),document.querySelector("#in_winningRank").addEventListener("change",e=>{let t=parseInt(e.target.value,10);winnerType="custom",setWinnerRank(isNaN(t)?0:t)}),document.querySelector(".btn-last-winner").addEventListener("click",()=>{let e=window.roulette.getCount();winnerType="last",setWinnerRank(e)}),document.querySelector(".btn-first-winner").addEventListener("click",()=>{winnerType="first",setWinnerRank(1)}),window.roulette.addEventListener("goal",()=>{ready=!1,showResultTimerSetup(),setTimeout(()=>{document.querySelector("#settings").classList.remove("game-running")},3e3)}),window.roulette.addEventListener("message",e=>{var t;let n;t=e.detail,(n=document.createElement("div")).classList.add("toast"),n.innerHTML=t,window.translateElement&&window.translateElement(n),document.body.appendChild(n),setTimeout(()=>{document.body.removeChild(n)},1200)});let t=document.querySelector("#btnToggleSettings"),n=document.querySelector(".collapsible-rows");t.addEventListener("click",()=>{n.classList.toggle("collapsed"),t.querySelector(".toggle-arrow").textContent=n.classList.contains("collapsed")?"▲":"▼"}),document.querySelector("#btnShuffle").click();let o=window.roulette.getMaps(),u=document.querySelector("#sltMap");o.forEach(e=>{let t=document.createElement("option");t.value=e.index,t.innerHTML=e.title,t.setAttribute("data-trans",""),window.translateElement(t),u.append(t)}),u.addEventListener("change",e=>{let t=e.target.value;window.roulette.setMap(t)})}document.addEventListener("DOMContentLoaded",()=>{initialize()});</script>
+<h1 class=sr-only>타요 핀볼 - 랜덤 추첨기</h1>
+<div id=settings class=settings>
+  <div class=right>
+    <button id=btnToggleSettings class=btn-toggle-settings>
+      <span data-trans>Settings</span>
+      <i class=toggle-arrow>▲</i>
+    </button>
+    <div class="collapsed collapsible-rows">
+      <div class=row>
+        <select id=sltMap aria-label=맵></select>
+      </div>
+      <div class=row>
+        <div class=btn-group aria-label="당첨 순위">
+          <button class="active btn-first-winner btn-winner" data-trans>First</button>
+          <button class="btn-last-winner btn-winner" data-trans>Last</button>
+          <input type=number id=in_winningRank value=1 min=1>
+        </div>
+      </div>
+      <div class="actions setup-actions">
+        <button id=btnShuffle>
+          <i class="icon shuffle"></i>
+          <span data-trans>Shuffle</span>
+        </button>
+        <button id=btnStart>
+          <i class="icon play"></i>
+          <span data-trans>Start</span>
+        </button>
+      </div>
+      <div class="row speed-row">
+        <div class="btn-group speed-group" aria-label=배속>
+          <button type=button class="active btn-speed" data-speed=1>1x</button>
+          <button type=button class=btn-speed data-speed=2>2x</button>
+          <button type=button class=btn-speed data-speed=5>5x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=left>
+    <textarea id=in_names placeholder="Input names separated by commas or line feed here" data-trans=placeholder>타요,종겜,핀볼</textarea>
+  </div>
+</div>
+<div id=resultTimerOverlay class="hidden result-timer-overlay" role=dialog aria-label="타이머 설정">
+  <div class=result-timer-setup>
+    <strong>타이머 설정</strong>
+    <div class=result-timer-controls>
+      <input type=number id=in_resultTimerMinutes value=0 min=0 max=999 step=1 aria-label="타이머 분">
+      <span>분</span>
+      <input type=number id=in_resultTimerSeconds value=0 min=0 max=59 step=1 aria-label="타이머 초">
+      <span>초</span>
+      <button type=button id=btnResultTimerStart>시작</button>
+    </div>
+  </div>
+  <div class=result-timer-running aria-live=polite>
+    <span>남은 시간</span>
+    <strong id=resultTimerDisplay>00:00</strong>
+    <div class=result-timer-actions>
+      <button type=button id=btnResultTimerPause aria-pressed=false>일시정지</button>
+      <button type=button id=btnResultTimerReset>리셋</button>
+    </div>
+  </div>
+</div>
+
+
