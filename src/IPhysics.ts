@@ -18,7 +18,7 @@ export interface IPhysics {
 
   getMarblePosition(id: number): { x: number; y: number; angle: number };
 
-  getEntities(): MapEntityState[];
+  getEntities(interpolation?: number): MapEntityState[];
 
   impact(id: number): void;
 

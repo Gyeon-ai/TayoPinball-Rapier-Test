@@ -2,6 +2,7 @@ import Box2DFactory from 'box2d-wasm';
 import type { StageDef } from './data/maps';
 import type { IPhysics } from './IPhysics';
 import type { MapEntity, MapEntityState } from './types/MapEntity.type';
+import { interpolateAngle } from './utils/interpolateAngle';
 
 export class Box2dPhysics implements IPhysics {
   private Box2D!: typeof Box2D & EmscriptenModule;
@@ -9,7 +10,7 @@ export class Box2dPhysics implements IPhysics {
   private world!: Box2D.b2World;
 
   private marbleMap: { [id: number]: Box2D.b2Body } = {};
-  private entities: ({ body: Box2D.b2Body } & MapEntityState)[] = [];
+  private entities: ({ body: Box2D.b2Body; previousAngle: number } & MapEntityState)[] = [];
 
   private deleteCandidates: Box2D.b2Body[] = [];
 
@@ -83,6 +84,7 @@ export class Box2dPhysics implements IPhysics {
       body.SetTransform(new this.Box2D.b2Vec2(entity.position.x, entity.position.y), 0);
       this.entities.push({
         body,
+        previousAngle: 0,
         x: entity.position.x,
         y: entity.position.y,
         angle: 0,
@@ -93,6 +95,8 @@ export class Box2dPhysics implements IPhysics {
   }
 
   clearEntities() {
+    this.deleteCandidates.forEach((body) => this.world.DestroyBody(body));
+    this.deleteCandidates = [];
     this.entities.forEach((entity) => {
       this.world.DestroyBody(entity.body);
     });
@@ -139,11 +143,11 @@ export class Box2dPhysics implements IPhysics {
     }
   }
 
-  getEntities(): MapEntityState[] {
+  getEntities(interpolation: number = 1): MapEntityState[] {
     return this.entities.map((entity) => {
       return {
         ...entity,
-        angle: entity.body.GetAngle(),
+        angle: interpolateAngle(entity.previousAngle, entity.body.GetAngle(), interpolation),
       };
     });
   }
@@ -182,6 +186,7 @@ export class Box2dPhysics implements IPhysics {
     });
     this.deleteCandidates = [];
 
+    for (const entity of this.entities) entity.previousAngle = entity.body.GetAngle();
     this.world.Step(deltaSeconds, 6, 2);
 
     for (let i = this.entities.length - 1; i >= 0; i--) {
